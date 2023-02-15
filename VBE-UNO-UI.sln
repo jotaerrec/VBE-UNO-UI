@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "VBE-UNO-UI", "VBE-UNO-UI\VBE-UNO-UI.vbproj", "{1168138A-355A-4BC5-80AB-8BF8E6DEC216}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1168138A-355A-4BC5-80AB-8BF8E6DEC216}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1168138A-355A-4BC5-80AB-8BF8E6DEC216}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1168138A-355A-4BC5-80AB-8BF8E6DEC216}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1168138A-355A-4BC5-80AB-8BF8E6DEC216}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {33F854AD-0E6D-493F-8138-6DEA1EE87809}
+	EndGlobalSection
+EndGlobal
