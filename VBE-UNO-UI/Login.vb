@@ -3,7 +3,9 @@ Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 
 Public Class Login
     Private exist As Boolean
-    Private rutaArchivo As String = "C:\Users\javir\Documents\Eleconar\credentials.txt"
+    Dim rutaDocumentos As String = My.Computer.FileSystem.SpecialDirectories.MyDocuments
+    Dim rutaEleconar As String = rutaDocumentos & "\Eleconar"
+    Private rutaArchivo As String = rutaEleconar & "\credentials.txt"
 
     Private Sub login_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         existTxt()
@@ -21,6 +23,9 @@ Public Class Login
     End Sub
 
     Private Sub existTxt()
+        If Not My.Computer.FileSystem.DirectoryExists(rutaEleconar) Then
+            My.Computer.FileSystem.CreateDirectory(rutaEleconar)
+        End If
         If Not File.Exists(rutaArchivo) Then
             registerLbl.Text = "Todavia no te registraste, registrate!"
             registerLbl.Visible = True

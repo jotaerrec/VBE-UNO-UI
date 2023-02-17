@@ -22,5 +22,15 @@ VBE-UNO-UI
   resource lookups using this strongly typed resource class.
 </summary>
 </member>
+<member name="P:VBE_UNO_UI.My.Resources.Resources.lampara_off">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:VBE_UNO_UI.My.Resources.Resources.lampara_prendida">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
 </members>
 </doc>

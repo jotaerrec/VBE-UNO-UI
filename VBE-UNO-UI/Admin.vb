@@ -2,13 +2,19 @@
 Imports System.Text
 
 Public Class Admin
-    Dim rutaArchivo As String = "C:\Users\javir\Documents\Eleconar\config.txt"
     Dim ip As String = Nothing
+    Dim rutaDocumentos As String = My.Computer.FileSystem.SpecialDirectories.MyDocuments
+    Dim rutaEleconar As String = rutaDocumentos & "\Eleconar"
+    Dim rutaArchivo As String = rutaEleconar & "\config.txt"
+
     Private Sub Admin_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         verifyExist()
     End Sub
 
     Private Sub verifyExist()
+        If Not My.Computer.FileSystem.DirectoryExists(rutaEleconar) Then
+            My.Computer.FileSystem.CreateDirectory(rutaEleconar)
+        End If
 
         If File.Exists(rutaArchivo) Then
             ' Lee el contenido del archivo
@@ -35,20 +41,20 @@ Public Class Admin
             End If
             ' Lee todo el contenido del archivo excepto la línea que contiene la dirección IP
             Dim lineas As String() = File.ReadAllLines(rutaArchivo)
-                Dim contenidoSinIP As String = ""
+            Dim contenidoSinIP As String = ""
 
-                For i As Integer = 0 To lineas.Length - 1
-                    If Not lineas(i).StartsWith("IP=") Then
-                        contenidoSinIP &= lineas(i) & Environment.NewLine
-                    End If
-                Next
+            For i As Integer = 0 To lineas.Length - 1
+                If Not lineas(i).StartsWith("IP=") Then
+                    contenidoSinIP &= lineas(i) & Environment.NewLine
+                End If
+            Next
 
-                ' Escribe la nueva dirección IP en el archivo
-                Dim nuevoContenido As String = "IP=" & nuevaIP & Environment.NewLine & contenidoSinIP
-                File.WriteAllText(rutaArchivo, nuevoContenido)
-                ip = nuevaIP
-                MsgBox("Se ha guardado correctamente la ip:" + ip)
-            End If
+            ' Escribe la nueva dirección IP en el archivo
+            Dim nuevoContenido As String = "IP=" & nuevaIP & Environment.NewLine & contenidoSinIP
+            File.WriteAllText(rutaArchivo, nuevoContenido)
+            ip = nuevaIP
+            MsgBox("Se ha guardado correctamente la ip:" + ip)
+        End If
     End Sub
 
     Private Sub PictureAdminBox_Click(sender As Object, e As EventArgs) Handles PictureAdminBox.Click

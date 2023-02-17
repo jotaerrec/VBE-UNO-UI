@@ -8,17 +8,28 @@ Public Class User
     Public stateConnect As Boolean = False
     Public stateLed As Boolean = False
     Public pin As String
-    Dim rutaArchivo As String = "C:\Users\javir\Documents\Eleconar\config.txt"
+    Dim rutaDocumentos As String = My.Computer.FileSystem.SpecialDirectories.MyDocuments
+    Dim rutaEleconar As String = rutaDocumentos & "\Eleconar"
+    Dim rutaArchivo As String = rutaEleconar & "\config.txt"
+
+
 
     Private Sub user_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LeerArchivo()
+        boxTipoPin.Items.Add("Analogico")
+        boxTipoPin.Items.Add("Digital")
+        boxModoPin.Items.Add("Input")
+        boxModoPin.Items.Add("Output")
     End Sub
 
     Private Sub btnIp_Click(sender As Object, e As EventArgs) Handles btnIp.Click
+        'Validaciones
         If IP = Nothing Then
             ShowError("Tiene que acceder al panel de administrador y configurar una ip." + IP)
             Return
         End If
+
+        'Conectar al esp
         Try
             ESP.Conectar(IP:=IP)
             changeToPanel(PanelStateEsp, stateConnect, stateEspText)
@@ -32,23 +43,32 @@ Public Class User
 
     Private Sub btnLed_Click(sender As Object, e As EventArgs) Handles btnLed.Click
         'Validaciones
-        If TextBoxLed.Text = "" Then
+        If txtNombrePin.Text = "" Or txtNumeroPin.Text = "" Or boxModoPin.Text = "" Or boxTipoPin.Text = "" Then
             ShowError("Complete el formulario.")
             Return
         End If
-        pin = TextBoxLed.Text
+        Dim nombreDePin As String = txtNombrePin.Text
+        Dim numeroDePin As String = txtNumeroPin.Text
+        Dim tipoDePin As String = boxTipoPin.Text
+        Dim modoDePin As String = boxModoPin.Text
+
+        ' Crear un nuevo objeto Pin con los datos ingresados
+        Dim nuevoPin As New Pin(nombreDePin, numeroDePin, tipoDePin, modoDePin)
+
+        ' Agregar el nuevo objeto Pin al control contenedor
+        FlowLayoutPanelPines.Controls.Add(nuevoPin.PanelPin)
     End Sub
 
 
-    Private Sub TextBoxLed_KeyPress(sender As Object, e As KeyPressEventArgs) Handles TextBoxLed.KeyPress
+    Private Sub TextBoxLed_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtNumeroPin.KeyPress
         If Not Char.IsDigit(e.KeyChar) And Not Char.IsControl(e.KeyChar) Then
             e.Handled = True
         End If
     End Sub
-    Private Sub PanelStateLed_Click(sender As Object, e As EventArgs) Handles PanelStateLed.Click
+    Private Sub PanelStateLed_Click(sender As Object, e As EventArgs)
         Try
             ESP.Enviar(pin, Not stateLed)
-            changeToPanel(PanelStateLed, stateLed, stateLedText)
+            'changeToPanelPin(panelEstadoLed, stateLed, lblEstadoLed)
             stateLed = Not stateLed
         Catch ex As Exception
             ShowError(ex.Message())
@@ -56,10 +76,10 @@ Public Class User
         End Try
     End Sub
 
-    Private Sub stateLedText_Click(sender As Object, e As EventArgs) Handles stateLedText.Click
+    Private Sub stateLedText_Click(sender As Object, e As EventArgs)
         Try
             ESP.Enviar(pin, Not stateLed)
-            changeToPanel(PanelStateLed, stateLed, stateLedText)
+            'changeToPanelPin(panelEstadoLed, stateLed, lblEstadoLed)
             stateLed = Not stateLed
         Catch ex As Exception
             ShowError(ex.Message())
@@ -68,7 +88,7 @@ Public Class User
     End Sub
 
 
-    Private Sub changeToPanel(panel As Panel, state As Boolean, label As Label)
+    Private Sub changeToPanelPin(panel As Panel, state As Boolean, label As Label)
         If state Then
             panel.BackColor = Color.FromArgb(34, 51, 40)
             label.Text = "Connected"
@@ -78,7 +98,7 @@ Public Class User
         End If
     End Sub
 
-    Private Sub ShowError(ex As String)
+    Public Sub ShowError(ex As String)
         If ex = "" Then
             Return
         End If
@@ -95,6 +115,10 @@ Public Class User
     End Sub
 
     Private Sub LeerArchivo()
+        If Not My.Computer.FileSystem.DirectoryExists(rutaEleconar) Then
+            My.Computer.FileSystem.CreateDirectory(rutaEleconar)
+        End If
+
         If File.Exists(rutaArchivo) Then
             ' Lee el contenido del archivo
             Dim contenidoArchivo As String = File.ReadAllText(rutaArchivo)
@@ -112,5 +136,26 @@ Public Class User
         Else
             ShowError("Tiene que acceder al panel de administrador y configurar una ip.")
         End If
+    End Sub
+    Private Sub changeToPanel(panel As Panel, state As Boolean, label As Label)
+        If state Then
+            panel.BackColor = Color.FromArgb(34, 51, 40)
+            label.Text = "Connected"
+        Else
+            panel.BackColor = Color.FromArgb(92, 22, 26)
+            label.Text = "Disconnected"
+        End If
+    End Sub
+
+    Private Sub Label3_Click(sender As Object, e As EventArgs) Handles Label3.Click
+
+    End Sub
+
+    Private Sub Label6_Click(sender As Object, e As EventArgs) Handles Label6.Click
+
+    End Sub
+
+    Private Sub PictureBox2_Click_1(sender As Object, e As EventArgs) Handles PictureBox2.Click
+
     End Sub
 End Class
