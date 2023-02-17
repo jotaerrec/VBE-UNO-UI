@@ -15,6 +15,7 @@ Public Class Pin
     Public ReadOnly Property LabelNumeroDePin As Label
     Public ReadOnly Property LabelEstadoLed As Label
     Public ReadOnly Property PictureLed As PictureBox
+    Public ReadOnly Property textBoxAnalogico As TextBox
 
     ' Constructor de la clase
     Public Sub New(nombreDePin As String, numeroDePin As String, tipoDePin As String, modoDePin As String, Optional estadoDelPin As Boolean = Nothing)
@@ -38,6 +39,7 @@ Public Class Pin
         Me.LabelNumeroDePin = New Label()
         Me.LabelEstadoLed = New Label()
         Me.PictureLed = New PictureBox()
+        Me.textBoxAnalogico = New TextBox()
 
         ' Configuramos el panel del pin
         Me.PanelPin.BackColor = Color.FromArgb(71, 68, 102)
@@ -49,6 +51,7 @@ Public Class Pin
         Me.PanelPin.Controls.Add(Me.LabelNombreDePin)
         Me.PanelPin.Controls.Add(Me.LabelNumeroDePin)
         Me.PanelPin.Controls.Add(Me.PictureLed)
+        Me.PanelPin.Controls.Add(Me.textBoxAnalogico)
 
         'PictureLed
 
@@ -78,7 +81,7 @@ Public Class Pin
         Me.LabelNombreDePin.Text = nombreDePin
         Me.LabelNombreDePin.TextAlign = ContentAlignment.MiddleCenter
 
-        If tipoDePin = "Digital" And modoDePin = "Output" Then
+        If tipoDePin = "Digital" Then
 
             'PictureLed
             Me.PictureLed.BackgroundImageLayout = ImageLayout.Stretch
@@ -91,6 +94,23 @@ Public Class Pin
 
 
             AddHandler Me.PictureLed.Click, AddressOf CambiarEstado
+        Else
+            '
+            'textBoxAnalogico
+            '
+            Me.textBoxAnalogico.BackColor = Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(19, Byte), Integer), CType(CType(32, Byte), Integer))
+            Me.textBoxAnalogico.BorderStyle = BorderStyle.None
+            Me.textBoxAnalogico.Font = New Font("Microsoft Sans Serif", 13.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.textBoxAnalogico.ForeColor = SystemColors.Window
+            Me.textBoxAnalogico.ImeMode = ImeMode.NoControl
+            Me.textBoxAnalogico.Location = New Point(63, 7)
+            Me.textBoxAnalogico.MaxLength = 3000
+            Me.textBoxAnalogico.MinimumSize = New Size(60, 22)
+            Me.textBoxAnalogico.Name = "textBoxAnalogico"
+            Me.textBoxAnalogico.Size = New Size(60, 22)
+            Me.textBoxAnalogico.TabIndex = 2
+            Me.textBoxAnalogico.Text = "340"
+            Me.textBoxAnalogico.TextAlign = HorizontalAlignment.Center
         End If
     End Sub
 

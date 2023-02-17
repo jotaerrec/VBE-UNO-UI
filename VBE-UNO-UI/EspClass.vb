@@ -44,6 +44,7 @@ Public Class EspClass
             If entrada IsNot Nothing Then
                 While entrada.BaseStream.CanRead
                     rawdata = entrada.ReadLine()
+                    ' User.listaDePines.Contains
                     'Procesar datos recibidos
                 End While
             End If

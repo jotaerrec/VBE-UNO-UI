@@ -7,7 +7,8 @@ Public Class User
     Public IP As String = Nothing
     Public stateConnect As Boolean = False
     Public stateLed As Boolean = False
-    Public pin As String
+    Public listaDePines As New List(Of Pin)
+
     Dim rutaDocumentos As String = My.Computer.FileSystem.SpecialDirectories.MyDocuments
     Dim rutaEleconar As String = rutaDocumentos & "\Eleconar"
     Dim rutaArchivo As String = rutaEleconar & "\config.txt"
@@ -54,7 +55,7 @@ Public Class User
 
         ' Crear un nuevo objeto Pin con los datos ingresados
         Dim nuevoPin As New Pin(nombreDePin, numeroDePin, tipoDePin, modoDePin)
-
+        listaDePines.Add(nuevoPin)
         ' Agregar el nuevo objeto Pin al control contenedor
         FlowLayoutPanelPines.Controls.Add(nuevoPin.PanelPin)
     End Sub
@@ -64,27 +65,6 @@ Public Class User
         If Not Char.IsDigit(e.KeyChar) And Not Char.IsControl(e.KeyChar) Then
             e.Handled = True
         End If
-    End Sub
-    Private Sub PanelStateLed_Click(sender As Object, e As EventArgs)
-        Try
-            ESP.Enviar(pin, Not stateLed)
-            'changeToPanelPin(panelEstadoLed, stateLed, lblEstadoLed)
-            stateLed = Not stateLed
-        Catch ex As Exception
-            ShowError(ex.Message())
-            stateConnect = ESP.EstaConectado()
-        End Try
-    End Sub
-
-    Private Sub stateLedText_Click(sender As Object, e As EventArgs)
-        Try
-            ESP.Enviar(pin, Not stateLed)
-            'changeToPanelPin(panelEstadoLed, stateLed, lblEstadoLed)
-            stateLed = Not stateLed
-        Catch ex As Exception
-            ShowError(ex.Message())
-            stateConnect = ESP.EstaConectado()
-        End Try
     End Sub
 
 
@@ -155,7 +135,11 @@ Public Class User
 
     End Sub
 
-    Private Sub PictureBox2_Click_1(sender As Object, e As EventArgs) Handles PictureBox2.Click
+    Private Sub PictureBox2_Click_1(sender As Object, e As EventArgs)
+
+    End Sub
+
+    Private Sub Label8_Click(sender As Object, e As EventArgs) Handles Label8.Click
 
     End Sub
 End Class

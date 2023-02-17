@@ -42,7 +42,7 @@ Partial Class User
         Me.boxTipoPin = New System.Windows.Forms.ComboBox()
         Me.boxModoPin = New System.Windows.Forms.ComboBox()
         Me.panelPin = New System.Windows.Forms.Panel()
-        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
+        Me.textBoxAnalogico = New System.Windows.Forms.TextBox()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.FlowLayoutPanelPines = New System.Windows.Forms.FlowLayoutPanel()
@@ -50,7 +50,6 @@ Partial Class User
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureAdminBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.panelPin.SuspendLayout()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'LabelMain
@@ -105,9 +104,10 @@ Partial Class User
         Me.txtNumeroPin.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtNumeroPin.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtNumeroPin.ForeColor = System.Drawing.Color.White
-        Me.txtNumeroPin.Location = New System.Drawing.Point(172, 145)
+        Me.txtNumeroPin.Location = New System.Drawing.Point(172, 140)
+        Me.txtNumeroPin.MinimumSize = New System.Drawing.Size(100, 24)
         Me.txtNumeroPin.Name = "txtNumeroPin"
-        Me.txtNumeroPin.Size = New System.Drawing.Size(100, 19)
+        Me.txtNumeroPin.Size = New System.Drawing.Size(100, 24)
         Me.txtNumeroPin.TabIndex = 18
         '
         'Label3
@@ -202,10 +202,11 @@ Partial Class User
         Me.txtNombrePin.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtNombrePin.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtNombrePin.ForeColor = System.Drawing.Color.White
-        Me.txtNombrePin.Location = New System.Drawing.Point(35, 145)
+        Me.txtNombrePin.Location = New System.Drawing.Point(35, 140)
         Me.txtNombrePin.MaxLength = 30
+        Me.txtNombrePin.MinimumSize = New System.Drawing.Size(100, 24)
         Me.txtNombrePin.Name = "txtNombrePin"
-        Me.txtNombrePin.Size = New System.Drawing.Size(100, 19)
+        Me.txtNombrePin.Size = New System.Drawing.Size(100, 24)
         Me.txtNombrePin.TabIndex = 14
         '
         'Label7
@@ -274,7 +275,7 @@ Partial Class User
         'panelPin
         '
         Me.panelPin.BackColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(68, Byte), Integer), CType(CType(102, Byte), Integer))
-        Me.panelPin.Controls.Add(Me.PictureBox2)
+        Me.panelPin.Controls.Add(Me.textBoxAnalogico)
         Me.panelPin.Controls.Add(Me.Label10)
         Me.panelPin.Controls.Add(Me.Label9)
         Me.panelPin.Location = New System.Drawing.Point(397, 181)
@@ -283,16 +284,21 @@ Partial Class User
         Me.panelPin.TabIndex = 22
         Me.panelPin.Visible = False
         '
-        'PictureBox2
+        'textBoxAnalogico
         '
-        Me.PictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.PictureBox2.Image = Global.VBE_UNO_UI.My.Resources.Resources.lampara_off
-        Me.PictureBox2.Location = New System.Drawing.Point(81, 2)
-        Me.PictureBox2.Name = "PictureBox2"
-        Me.PictureBox2.Size = New System.Drawing.Size(32, 31)
-        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PictureBox2.TabIndex = 24
-        Me.PictureBox2.TabStop = False
+        Me.textBoxAnalogico.BackColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(19, Byte), Integer), CType(CType(32, Byte), Integer))
+        Me.textBoxAnalogico.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.textBoxAnalogico.Font = New System.Drawing.Font("Microsoft Sans Serif", 13.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.textBoxAnalogico.ForeColor = System.Drawing.SystemColors.Window
+        Me.textBoxAnalogico.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.textBoxAnalogico.Location = New System.Drawing.Point(63, 7)
+        Me.textBoxAnalogico.MaxLength = 3000
+        Me.textBoxAnalogico.MinimumSize = New System.Drawing.Size(60, 22)
+        Me.textBoxAnalogico.Name = "textBoxAnalogico"
+        Me.textBoxAnalogico.Size = New System.Drawing.Size(60, 22)
+        Me.textBoxAnalogico.TabIndex = 2
+        Me.textBoxAnalogico.Text = "340"
+        Me.textBoxAnalogico.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label10
         '
@@ -360,7 +366,7 @@ Partial Class User
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureAdminBox, System.ComponentModel.ISupportInitialize).EndInit()
         Me.panelPin.ResumeLayout(False)
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.panelPin.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -388,5 +394,5 @@ Partial Class User
     Friend WithEvents Label9 As Label
     Friend WithEvents Label10 As Label
     Friend WithEvents FlowLayoutPanelPines As FlowLayoutPanel
-    Friend WithEvents PictureBox2 As PictureBox
+    Friend WithEvents textBoxAnalogico As TextBox
 End Class
