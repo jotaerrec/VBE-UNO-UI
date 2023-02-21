@@ -50,19 +50,7 @@ Public Class Pin
         'Me.PanelPin.Controls.Add(Me.PanelEstadoLed)
         Me.PanelPin.Controls.Add(Me.LabelNombreDePin)
         Me.PanelPin.Controls.Add(Me.LabelNumeroDePin)
-        Me.PanelPin.Controls.Add(Me.PictureLed)
-        Me.PanelPin.Controls.Add(Me.textBoxAnalogico)
 
-        'PictureLed
-
-        Me.PictureLed.BackgroundImageLayout = ImageLayout.Stretch
-        Me.PictureLed.Image = Global.VBE_UNO_UI.My.Resources.Resources.lampara_off
-        Me.PictureLed.Location = New Point(81, 2)
-        Me.PictureLed.Name = "PictureLed"
-        Me.PictureLed.Size = New Size(32, 31)
-        Me.PictureLed.SizeMode = PictureBoxSizeMode.Zoom
-        Me.PictureLed.TabIndex = 24
-        Me.PictureLed.TabStop = False
 
 
         ' Configuramos el label del número del pin
@@ -84,7 +72,10 @@ Public Class Pin
         If tipoDePin = "Digital" Then
 
             'PictureLed
+
+            Me.PanelPin.Controls.Add(Me.PictureLed)
             Me.PictureLed.BackgroundImageLayout = ImageLayout.Stretch
+            Me.PictureLed.Image = Global.VBE_UNO_UI.My.Resources.Resources.lampara_off
             Me.PictureLed.Location = New Point(81, 2)
             Me.PictureLed.Name = "PictureLed"
             Me.PictureLed.Size = New Size(32, 31)
@@ -95,22 +86,32 @@ Public Class Pin
 
             AddHandler Me.PictureLed.Click, AddressOf CambiarEstado
         Else
+
             '
             'textBoxAnalogico
             '
-            Me.textBoxAnalogico.BackColor = Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(19, Byte), Integer), CType(CType(32, Byte), Integer))
-            Me.textBoxAnalogico.BorderStyle = BorderStyle.None
-            Me.textBoxAnalogico.Font = New Font("Microsoft Sans Serif", 13.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-            Me.textBoxAnalogico.ForeColor = SystemColors.Window
-            Me.textBoxAnalogico.ImeMode = ImeMode.NoControl
-            Me.textBoxAnalogico.Location = New Point(63, 7)
-            Me.textBoxAnalogico.MaxLength = 3000
-            Me.textBoxAnalogico.MinimumSize = New Size(60, 22)
+            Me.PanelPin.Controls.Add(Me.textBoxAnalogico)
+
+            Me.textBoxAnalogico.BackColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(19, Byte), Integer), CType(CType(32, Byte), Integer))
+            Me.textBoxAnalogico.BorderStyle = System.Windows.Forms.BorderStyle.None
+            Me.textBoxAnalogico.Font = New System.Drawing.Font("Microsoft Sans Serif", 13.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+            Me.textBoxAnalogico.ForeColor = System.Drawing.SystemColors.Window
+            Me.textBoxAnalogico.ImeMode = System.Windows.Forms.ImeMode.NoControl
+            Me.textBoxAnalogico.Location = New System.Drawing.Point(66, 7)
+            Me.textBoxAnalogico.MaxLength = 5
+            Me.textBoxAnalogico.MinimumSize = New System.Drawing.Size(60, 22)
             Me.textBoxAnalogico.Name = "textBoxAnalogico"
-            Me.textBoxAnalogico.Size = New Size(60, 22)
+            Me.textBoxAnalogico.Size = New System.Drawing.Size(60, 22)
             Me.textBoxAnalogico.TabIndex = 2
             Me.textBoxAnalogico.Text = "340"
-            Me.textBoxAnalogico.TextAlign = HorizontalAlignment.Center
+            Me.textBoxAnalogico.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+
+            If modoDePin = "Input" Then
+                AddHandler Me.textBoxAnalogico.KeyPress, AddressOf SoloNum
+            Else
+                Me.textBoxAnalogico.Enabled = False
+            End If
+
         End If
     End Sub
 
@@ -130,5 +131,10 @@ Public Class Pin
         End Try
     End Sub
 
+    Private Sub SoloNum(sender As Object, e As KeyPressEventArgs)
+        If Not Char.IsDigit(e.KeyChar) And Not Char.IsControl(e.KeyChar) Then
+            e.Handled = True
+        End If
+    End Sub
 
 End Class
