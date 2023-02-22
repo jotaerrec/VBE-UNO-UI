@@ -55,6 +55,7 @@ Public Class User
 
         ' Crear un nuevo objeto Pin con los datos ingresados
         Dim nuevoPin As New Pin(nombreDePin, numeroDePin, tipoDePin, modoDePin)
+
         listaDePines.Add(nuevoPin)
         ' Agregar el nuevo objeto Pin al control contenedor
         FlowLayoutPanelPines.Controls.Add(nuevoPin.PanelPin)

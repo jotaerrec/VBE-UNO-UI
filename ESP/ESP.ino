@@ -58,12 +58,8 @@ void manejarSolicitudHTTP(WiFiClient& client) {
     Serial.println(request);
     request.toLowerCase();
     procesarSolicitudHTTP(request);
-  } else {
-    // Devolver respuesta de error HTTP
-    // ...
   }
 
-  // Leer pines de entrada
   leerPinesDeEntrada();
 }
 
@@ -71,6 +67,8 @@ void manejarSolicitudHTTP(WiFiClient& client) {
 void procesarSolicitudHTTP(const String& request) {
   if (request.startsWith("agregarpin:")) {
     agregarPin(request);
+  } else if (request.startsWith("escribir:")) {
+    escribirPin(request);
   }
 
 }
@@ -97,13 +95,29 @@ void imprimirDetallesConexion() {
   Serial.println(WiFi.localIP());
 }
 
+void escribirPin(String datos) {
+  int pinNumber = datos.substring(datos.indexOf("pin:") + 4, datos.indexOf(",")).toInt();
+  String valorStr = datos.substring(datos.indexOf("valor:") + 5, datos.indexOf(",", datos.indexOf("valor:")));
+
+  String tipoStr = datos.substring(datos.indexOf("tipo:") + 5, datos.length());
+  int tipo = tipoStr == "digital" ? DIGITAL : ANALOGICO;
+
+  if (tipo == DIGITAL) {
+    bool estado = valorStr == "true" ?  true : false;
+    digitalWrite(pinNumber, estado);
+  } else {
+    int valor = valorStr.toInt();
+    analogWrite(pinNumber, valor);
+  }
+}
+
 void agregarPin(String datos) {
 
   // Verifica que los datos sean válidos
-  int pinNumber = datos.substring(datos.indexOf("Pin:") + 4, datos.indexOf(",")).toInt();
+  int pinNumber = datos.substring(datos.indexOf("pin:") + 4, datos.indexOf(",")).toInt();
   verificarPin(pinNumber);
 
-  String modoStr = datos.substring(datos.indexOf("Modo:") + 5);
+  String modoStr = datos.substring(datos.indexOf("modo:") + 5, datos.indexOf(",", datos.indexOf("modo:")));
   int modo = modoStr == "entrada" ? ENTRADA : SALIDA;
 
   if (modo == SALIDA) {
@@ -116,7 +130,7 @@ void agregarPin(String datos) {
     return;
   }
 
-  String tipoStr = datos.substring(datos.indexOf("Tipo:") + 5, datos.lastIndexOf(","));
+  String tipoStr = datos.substring(datos.indexOf("tipo:") + 5, datos.length());
   int tipo = tipoStr == "digital" ? DIGITAL : ANALOGICO;
 
   Pin nuevoPin;
@@ -158,8 +172,9 @@ void leerPinesDeEntrada() {
 }
 
 void imprimirValorPin(int pin, int valor) {
+  client.print("valoresDeEntrada:");
   client.print("Pin:");
   client.print(pin);
-  client.print(",Valor:");
+  client.print(":Valor:");
   client.println(valor);
 }
