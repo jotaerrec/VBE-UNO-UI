@@ -23,7 +23,7 @@ Public Class EspClass
     Public Sub RegistrarNuevoPin(pin As String, tipo As String, modo As String)
         Try
             If salida IsNot Nothing Then
-                salida.WriteLine("AgregarPin:Pin" & pin & ",Modo:" & modo & ",Tipo:" & tipo)
+                salida.WriteLine("AgregarPin:PinNumber:" & pin & ",Modo:" & modo & ",Tipo:" & tipo)
                 salida.Flush()
             Else
                 Throw New Exception("No estas conectado")
@@ -35,7 +35,7 @@ Public Class EspClass
     Public Sub Enviar(pinout As String, valor As String, tipo As String)
         Try
             If salida IsNot Nothing Then
-                salida.WriteLine("Escribir:Pin:" & pinout & ",Valor:" & valor & ",Tipo" & tipo)
+                salida.WriteLine("Escribir:Pin:" & pinout & ",Valor:" & valor & ",Tipo:" & tipo)
                 salida.Flush()
             Else
                 Throw New Exception("No estas conectado")
@@ -65,7 +65,7 @@ Public Class EspClass
                 End While
             End If
         Catch ex As Exception
-            Throw New Exception("Error al recibir datos: " & ex.Message)
+            MsgBox("Error al recibir datos: " & ex.Message)
         Finally
             If entrada IsNot Nothing Then entrada.Dispose()
             If salida IsNot Nothing Then salida.Dispose()
@@ -80,9 +80,10 @@ Public Class EspClass
         End If
     End Sub
 
-    Private Sub leerValor(ByVal pin As String, ByVal valor As String)
-        If User.listaDePines.Any(Function(p) p.NumeroDePin = pin) Then
-            Dim pinModificado As Pin = User.listaDePines.Find(Function(p) p.NumeroDePin = pin)
+    Private Sub leerValor(ByVal pinOut As String, ByVal valor As String)
+
+        If User.listaDePines.Find(Function(p) p.NumeroDePin = pinOut) IsNot Nothing Then
+            Dim pinModificado As Pin = User.listaDePines.Find(Function(p) p.NumeroDePin = pinOut)
             pinModificado.CambiarValor(valor)
         End If
     End Sub

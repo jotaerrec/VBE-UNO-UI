@@ -1,4 +1,5 @@
-﻿Imports System.Windows.Forms.AxHost
+﻿Imports System.ComponentModel
+Imports System.Windows.Forms.AxHost
 
 Public Class Pin
     ' Atributos de la clase
@@ -19,20 +20,26 @@ Public Class Pin
 
     ' Constructor de la clase
     Public Sub New(nombreDePin As String, numeroDePin As String, tipoDePin As String, modoDePin As String, Optional valorPin As Boolean = Nothing)
-
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(User))
-
         ' Asignamos los valores de los atributos de la clase
         Me.NombreDePin = nombreDePin
         Me.NumeroDePin = numeroDePin
         Me.TipoDePin = tipoDePin
         Me.ModoDePin = modoDePin
+        Try
+            User.ESP.RegistrarNuevoPin(Me.NumeroDePin, Me.TipoDePin, Me.ModoDePin)
+        Catch ex As Exception
+            MsgBox("Error al guardar nuevo pin, revisa si estas conectado.")
+            Throw New Exception(ex.Message)
+            Return
+        End Try
+
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(User))
+
 
         If (Not valorPin = Nothing) Then
             estadoDelPin = False
         End If
 
-        User.ESP.RegistrarNuevoPin(Me.NumeroDePin, Me.TipoDePin, Me.ModoDePin)
 
         ' Creamos los elementos gráficos de la clase
         Me.PanelPin = New Panel()
@@ -90,6 +97,7 @@ Public Class Pin
 
     Private Sub ConfigurarPictureBoxLed()
 
+        Me.PanelPin.Controls.Add(Me.PictureLed)
         ' Configuramos el PictureBox del LED
         With PictureLed
             .BackgroundImageLayout = ImageLayout.Stretch
@@ -102,7 +110,12 @@ Public Class Pin
             .TabStop = False
         End With
 
-        AddHandler Me.PictureLed.Click, AddressOf CambiarEstado
+        If Me.ModoDePin = "Entrada" Then
+            Me.PictureLed.Cursor = Cursors.No
+        Else
+            Me.PictureLed.Cursor = Cursors.Hand
+            AddHandler Me.PictureLed.Click, AddressOf CambiarEstado
+        End If
 
     End Sub
 
@@ -128,7 +141,7 @@ Public Class Pin
 
 
         ' Configurar el control textBoxAnalogico según el modo de pin
-        If ModoDePin = "Input" Then
+        If ModoDePin = "Salida" Then
             AddHandler Me.textBoxAnalogico.KeyPress, AddressOf SoloNum
         Else
             Me.textBoxAnalogico.Enabled = False
@@ -166,7 +179,10 @@ Public Class Pin
     End Sub
     Public Sub CambiarValor(data As String)
         If Me.TipoDePin = "Digital" Then
-            Me.estadoDelPin = Convert.ToBoolean(data)
+            Dim boolConvert As Integer = Convert.ToInt16(data)
+            Me.estadoDelPin = Convert.ToBoolean(boolConvert)
+
+            Debug.Print("modificando!" & estadoDelPin & ":" & boolConvert)
             CambiarImagen()
         Else
             Me.textBoxAnalogico.Text = data

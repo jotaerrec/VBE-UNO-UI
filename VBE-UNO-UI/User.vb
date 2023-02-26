@@ -4,26 +4,26 @@ Imports System.Net.Sockets
 Public Class User
     Public Shared Property ESP As EspClass = New EspClass()
 
+    Public Shared Property listaDePines As New List(Of Pin)
     Public IP As String = Nothing
     Public stateConnect As Boolean = False
     Public stateLed As Boolean = False
-    Public listaDePines As New List(Of Pin)
 
     Dim rutaDocumentos As String = My.Computer.FileSystem.SpecialDirectories.MyDocuments
     Dim rutaEleconar As String = rutaDocumentos & "\Eleconar"
     Dim rutaArchivo As String = rutaEleconar & "\config.txt"
-
+    Dim valores() As String = {"0", "1", "2", "3", "4", "5", "12", "13", "14", "15", "16", "A0"}
 
 
     Private Sub user_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LeerArchivo()
         boxTipoPin.Items.Add("Analogico")
         boxTipoPin.Items.Add("Digital")
-        boxModoPin.Items.Add("Input")
-        boxModoPin.Items.Add("Output")
+        boxModoPin.Items.Add("Entrada")
+        boxModoPin.Items.Add("Salida")
     End Sub
 
-    Private Sub btnIp_Click(sender As Object, e As EventArgs) Handles btnIp.Click
+    Private Sub Conectarse(sender As Object, e As EventArgs) Handles btnIp.Click
         'Validaciones
         If IP = Nothing Then
             ShowError("Tiene que acceder al panel de administrador y configurar una ip." + IP)
@@ -33,7 +33,7 @@ Public Class User
         'Conectar al esp
         Try
             ESP.Conectar(IP:=IP)
-            changeToPanel(PanelStateEsp, stateConnect, stateEspText)
+            CambiarPanel(PanelStateEsp, stateConnect, stateEspText)
             stateConnect = True
         Catch ex As Exception
             ShowError(ex.Message())
@@ -42,7 +42,7 @@ Public Class User
 
     End Sub
 
-    Private Sub btnLed_Click(sender As Object, e As EventArgs) Handles btnLed.Click
+    Private Sub AgregarPin(sender As Object, e As EventArgs) Handles btnLed.Click
         'Validaciones
         If txtNombrePin.Text = "" Or txtNumeroPin.Text = "" Or boxModoPin.Text = "" Or boxTipoPin.Text = "" Then
             ShowError("Complete el formulario.")
@@ -52,32 +52,34 @@ Public Class User
         Dim numeroDePin As String = txtNumeroPin.Text
         Dim tipoDePin As String = boxTipoPin.Text
         Dim modoDePin As String = boxModoPin.Text
+        Dim nuevoPin As Pin
 
-        ' Crear un nuevo objeto Pin con los datos ingresados
-        Dim nuevoPin As New Pin(nombreDePin, numeroDePin, tipoDePin, modoDePin)
+        If Not valores.Contains(numeroDePin) Then
+            MsgBox("Ingresa un pin valido.")
+            Return
+        End If
 
-        listaDePines.Add(nuevoPin)
-        ' Agregar el nuevo objeto Pin al control contenedor
-        FlowLayoutPanelPines.Controls.Add(nuevoPin.PanelPin)
+
+        If (listaDePines.Any(Function(p) p.NumeroDePin = numeroDePin)) Then
+            MsgBox("Este pin ya esta en uso.")
+            Return
+        End If
+        Try
+            nuevoPin = New Pin(nombreDePin, numeroDePin, tipoDePin, modoDePin)
+            listaDePines.Add(nuevoPin)
+            FlowLayoutPanelPines.Controls.Add(nuevoPin.PanelPin)
+        Catch ex As Exception
+            nuevoPin = Nothing
+        End Try
     End Sub
 
 
     Private Sub TextBoxLed_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtNumeroPin.KeyPress
-        If Not Char.IsDigit(e.KeyChar) And Not Char.IsControl(e.KeyChar) Then
-            e.Handled = True
+        If (Not Char.IsNumber(e.KeyChar) AndAlso Not e.KeyChar = "A" AndAlso Not e.KeyChar = "a" AndAlso Not Char.IsControl(e.KeyChar)) Then
+            e.Handled = True ' Cancela el evento KeyPress si el carácter presionado no es numérico ni es la letra A.
         End If
     End Sub
 
-
-    Private Sub changeToPanelPin(panel As Panel, state As Boolean, label As Label)
-        If state Then
-            panel.BackColor = Color.FromArgb(34, 51, 40)
-            label.Text = "Connected"
-        Else
-            panel.BackColor = Color.FromArgb(92, 22, 26)
-            label.Text = "Disconnected"
-        End If
-    End Sub
 
     Public Sub ShowError(ex As String)
         If ex = "" Then
@@ -86,13 +88,9 @@ Public Class User
         MsgBox(ex, 0)
     End Sub
 
-    Private Sub PictureBox2_Click(sender As Object, e As EventArgs) Handles PictureAdminBox.Click
+    Private Sub LoginForm(sender As Object, e As EventArgs) Handles PictureAdminBox.Click
         Dim form As New Login()
         form.Show()
-    End Sub
-
-    Private Sub Label1_Click(sender As Object, e As EventArgs) Handles Label1.Click
-
     End Sub
 
     Private Sub LeerArchivo()
@@ -111,14 +109,24 @@ Public Class User
             If indiceInicio >= 0 AndAlso indiceFin > indiceInicio Then
                 IP = contenidoArchivo.Substring(indiceInicio, indiceFin - indiceInicio)
             End If
-            Debug.WriteLine(indiceFin)
             btnIp.Cursor = Cursors.Hand
             btnIp.Enabled = True
         Else
             ShowError("Tiene que acceder al panel de administrador y configurar una ip.")
         End If
     End Sub
-    Private Sub changeToPanel(panel As Panel, state As Boolean, label As Label)
+    Private Sub CambiarPanel(panel As Panel, state As Boolean, label As Label)
+        If ESP.EstaConectado() Then
+            PanelStateEsp.BackColor = Color.FromArgb(34, 51, 40)
+            label.Text = "Connected"
+        Else
+            PanelStateEsp.BackColor = Color.FromArgb(92, 22, 26)
+            label.Text = "Disconnected"
+        End If
+    End Sub
+
+
+    Private Sub changeToPanelPin(panel As Panel, state As Boolean, label As Label)
         If state Then
             panel.BackColor = Color.FromArgb(34, 51, 40)
             label.Text = "Connected"
@@ -128,19 +136,4 @@ Public Class User
         End If
     End Sub
 
-    Private Sub Label3_Click(sender As Object, e As EventArgs) Handles Label3.Click
-
-    End Sub
-
-    Private Sub Label6_Click(sender As Object, e As EventArgs) Handles Label6.Click
-
-    End Sub
-
-    Private Sub PictureBox2_Click_1(sender As Object, e As EventArgs)
-
-    End Sub
-
-    Private Sub Label8_Click(sender As Object, e As EventArgs) Handles Label8.Click
-
-    End Sub
 End Class
